@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dabba: Calorie Tracking for Indian Plates</title>
+<meta name="description" content="62% of Indian calories come from carbs and 351 million Indians carry abdominal obesity. Dabba is a free calorie tracker built for Indian bodies, Indian food and Indian routines.">
+<meta property="og:title" content="Dabba: Calorie Tracking for Indian Plates">
+<meta property="og:description" content="A free calorie tracker that adjusts for South Asian bodies, Indian food, sleep, stress and climate, and forecasts where your habits lead.">
+<meta name="theme-color" content="#E4E8EA">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Landing plan: the numbers are the story. Steel neutrals from the app, spice colours only on data.
+   One wide editorial column; each section = one claim, one chart, one source. */
+:root {
+  --steel: #e4e8ea; --steel-2: #d5dbde; --surface: #f5f7f7; --raised: #fff; --ink: #1c2429; --muted: #5a666c; --line: #c7cfd3;
+  --haldi: #d9940f; --haldi-ink: #7a5000; --mirch: #b3362b; --jeera: #8a5b37; --elaichi: #4f8a34; --jal: #2a78a3; --rai: #34405e;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif; --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --steel: #12171a; --steel-2: #1b2226; --surface: #192024; --raised: #212a2f; --ink: #e7ecee; --muted: #9aa7ad; --line: #2f3a40;
+    --haldi: #f0ad2b; --haldi-ink: #f6c766; --mirch: #e2604f; --jeera: #c48a5c; --elaichi: #7cbf5a; --jal: #5fb0dc; --rai: #9aa9d6; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--steel); color: var(--ink); font: 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.05; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+p { margin: 0; max-width: 62ch; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+:focus-visible { outline: 3px solid var(--haldi); outline-offset: 3px; border-radius: 6px; }
+
+nav.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--steel) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+nav.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 22px; text-decoration: none; }
+.brand img { width: 34px; height: 34px; border-radius: 50%; }
+.navlinks { display: flex; gap: 22px; font-weight: 600; font-size: 15px; }
+.navlinks a { text-decoration: none; color: var(--muted); }
+.navlinks a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; padding: 13px 22px; font-weight: 700; font-size: 16px; text-decoration: none; border: 1px solid var(--line); background: var(--raised); color: var(--ink); cursor: pointer; font-family: var(--body); }
+.btn.haldi { background: var(--haldi); border-color: var(--haldi); color: #241600; }
+.btn.ink { background: var(--ink); border-color: var(--ink); color: var(--steel); }
+.btn:hover { filter: brightness(1.05); }
+@media (max-width: 760px) { .navlinks { display: none; } }
+
+/* Hero */
+.hero { padding: 72px 0 56px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(40px, 6vw, 76px); font-weight: 800; }
+.hero p.lede { font-size: 20px; color: var(--muted); margin-top: 20px; }
+.hero .ctas { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.hero .fine { margin-top: 14px; font-size: 14px; color: var(--muted); }
+.thali { position: relative; }
+.thali svg { width: 100%; height: auto; display: block; }
+.thali-cap { margin-top: 10px; font-size: 14px; color: var(--muted); text-align: center; }
+@media (max-width: 880px) { .hero { grid-template-columns: 1fr; padding-top: 40px; } .thali { max-width: 420px; margin: 0 auto; } }
+
+section.block { padding: 80px 0; border-top: 1px solid var(--line); }
+.kicker { font-weight: 700; color: var(--haldi-ink); font-size: 15px; margin-bottom: 12px; }
+.block h2 { font-size: clamp(32px, 4.2vw, 52px); font-weight: 800; max-width: 22ch; }
+.block p.sub { font-size: 19px; color: var(--muted); margin-top: 16px; }
+.src { font-size: 13px; color: var(--muted); margin-top: 18px; }
+.src a { color: var(--muted); }
+sup a { text-decoration: none; color: var(--haldi-ink); font-weight: 700; font-size: 12px; }
+
+/* Stat grid */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; margin-top: 40px; }
+.stat { background: var(--surface); padding: 26px 24px; display: grid; gap: 6px; align-content: start; }
+.stat b { font-family: var(--display); font-weight: 800; font-size: clamp(40px, 5vw, 60px); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 15.5px; }
+.stat.hl b { color: var(--mirch); }
+@media (max-width: 820px) { .stats { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .stats { grid-template-columns: 1fr; } }
+
+/* Waffle */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 40px; }
+@media (max-width: 880px) { .split { grid-template-columns: 1fr; } }
+.waffle { display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; max-width: 460px; }
+.waffle i { aspect-ratio: 1; border-radius: 3px; background: var(--steel-2); }
+.waffle i.d { background: var(--mirch); }
+.waffle i.p { background: var(--haldi); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-size: 14.5px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.big-claim { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1; }
+
+/* BMI ruler */
+.ruler { margin-top: 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 28px 24px; }
+.ruler svg { width: 100%; height: auto; display: block; }
+.ruler text { font-family: var(--body); }
+
+/* Calculator */
+.calc { margin-top: 40px; display: grid; grid-template-columns: 340px 1fr; gap: 24px; }
+@media (max-width: 920px) { .calc { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 22px; }
+.form { display: grid; gap: 14px; }
+.form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form label { display: grid; gap: 5px; font-weight: 650; font-size: 14px; }
+.form input, .form select { font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--raised); color: var(--ink); min-height: 44px; width: 100%; }
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 560px) { .versus { grid-template-columns: 1fr; } }
+.vcard { border-radius: 20px; padding: 20px; border: 1px solid var(--line); background: var(--raised); display: grid; gap: 4px; align-content: start; }
+.vcard.dabba { border: 2px solid var(--haldi); }
+.vcard h3 { font-size: 17px; font-family: var(--body); font-weight: 700; letter-spacing: 0; }
+.vcard .k { font-family: var(--display); font-weight: 800; font-size: 54px; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.vcard dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin: 14px 0 0; font-size: 14.5px; }
+.vcard dt { color: var(--muted); } .vcard dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.delta { margin-top: 16px; font-size: 17px; }
+.delta b { font-family: var(--display); font-size: 24px; }
+.recipe { margin-top: 16px; display: grid; gap: 0; font-size: 14.5px; }
+.recipe div { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.recipe span.d { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+.recipe b.v { font-variant-numeric: tabular-nums; }
+
+/* Persona table */
+table.cmp { width: 100%; border-collapse: collapse; margin-top: 32px; font-size: 15.5px; }
+table.cmp th, table.cmp td { padding: 14px 10px; border-top: 1px solid var(--line); text-align: right; vertical-align: top; font-variant-numeric: tabular-nums; }
+table.cmp th:first-child, table.cmp td:first-child { text-align: left; }
+table.cmp thead th { font-size: 13px; color: var(--muted); font-weight: 700; border-top: 0; }
+table.cmp td small { display: block; color: var(--muted); font-size: 13px; }
+.pos { color: var(--elaichi); } .neg { color: var(--mirch); }
+.tablewrap { overflow-x: auto; }
+
+/* Feature matrix */
+.matrix { margin-top: 36px; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; background: var(--surface); }
+.matrix .r { display: grid; grid-template-columns: 1fr 140px 140px; gap: 12px; padding: 14px 20px; border-top: 1px solid var(--line); align-items: center; }
+.matrix .r:first-child { border-top: 0; font-weight: 700; font-size: 14px; color: var(--muted); }
+.matrix .r b { display: block; font-size: 16px; }
+.matrix .r small { color: var(--muted); font-size: 13.5px; }
+.matrix .c { text-align: center; font-weight: 700; }
+.yes { color: var(--elaichi); } .no { color: var(--muted); }
+@media (max-width: 620px) { .matrix .r { grid-template-columns: 1fr 72px 72px; padding: 12px 14px; } }
+
+/* Forecast demo + score */
+.chartbox { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 20px; }
+.chartbox svg { width: 100%; height: auto; display: block; }
+.chartbox text { font-family: var(--body); font-size: 11px; fill: var(--muted); }
+.bars { display: grid; gap: 12px; margin-top: 8px; }
+.bars .b { display: grid; grid-template-columns: 140px 1fr 44px; gap: 12px; align-items: center; font-size: 15px; }
+.bars .t { height: 14px; background: var(--steel-2); border-radius: 8px; overflow: hidden; }
+.bars .t i { display: block; height: 100%; border-radius: 8px; }
+
+.cta { text-align: center; padding: 96px 0; border-top: 1px solid var(--line); }
+.cta h2 { font-size: clamp(36px, 5vw, 64px); margin: 0 auto; max-width: 18ch; }
+.cta p { margin: 18px auto 0; color: var(--muted); font-size: 19px; }
+.cta .ctas { display: flex; gap: 12px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+footer { border-top: 1px solid var(--line); padding: 40px 0 60px; font-size: 14px; color: var(--muted); }
+footer ol { padding-left: 20px; display: grid; gap: 6px; margin: 12px 0 24px; }
+footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.getapp { position: fixed; inset: 0; z-index: 50; background: rgba(10,14,16,.55); display: grid; place-items: end center; padding: 16px; }
+.getapp[hidden] { display: none; }
+.getapp .card { background: var(--surface); color: var(--ink); width: 100%; max-width: 440px; border-radius: 26px; padding: 24px; display: grid; gap: 14px; border: 1px solid var(--line); box-shadow: 0 20px 60px -20px rgba(0,0,0,.5); }
+@media (min-width: 700px) { .getapp { place-items: center; } }
+.getapp h3 { font-size: 26px; }
+.getapp ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.getapp .qr { width: 220px; height: 220px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 10px; }
+.getapp .qr svg { width: 100%; height: 100%; display: block; }
+.getapp .row { display: flex; gap: 10px; flex-wrap: wrap; }
+.getapp .row .btn { flex: 1; }
+.getapp .note { font-size: 13.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Main"><div class="wrap">
+  <a class="brand" href="#"><img src="icons/icon-192.png" alt="">Dabba</a>
+  <div class="navlinks"><a href="#numbers">The numbers</a><a href="#bmi">BMI</a><a href="#calculator">Compare</a><a href="#forecast">Forecast</a><a href="#sources">Sources</a></div>
+  <button class="btn ink" data-get-app>Get the app</button>
+</div></nav>
+
+<main>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <h1>Most calorie apps were built for someone else's plate.</h1>
+      <p class="lede">Indians get most of their calories from carbs, carry more body fat at the same BMI, and fast for Ekadashi and Roza. Dabba is a free calorie tracker built around those facts, and it forecasts where your habits are taking you.</p>
+      <div class="ctas"><button class="btn haldi" data-get-app>Get the app, free</button><a class="btn" href="#" data-app-link>Use it in the browser</a><a class="btn" href="#calculator">Compare your numbers</a></div>
+      <p class="fine">Free. No ads. Works offline. Your data can be downloaded or deleted any time.</p>
+    </div>
+    <figure class="thali" style="margin:0">
+      <svg id="thali" viewBox="0 0 400 400" role="img" aria-label="Energy split of the average Indian diet: 62 percent carbohydrates, 12 percent protein, about 26 percent fat"></svg>
+      <figcaption class="thali-cap">Where the average Indian adult's calories come from<sup><a href="#s1">1</a></sup></figcaption>
+    </figure>
+  </header>
+</div>
+
+<section class="block" id="numbers"><div class="wrap">
+  <div class="kicker">The problem, in numbers</div>
+  <h2>India's plate is heavy on carbs and light on protein, and it shows.</h2>
+  <p class="sub">A generic calorie count misses what matters most for Indian health: where the calories come from, and where the body stores them.</p>
+  <div class="stats">
+    <div class="stat hl"><b>62%</b><span>of daily calories come from carbohydrates, one of the highest shares in the world<sup><a href="#s1">1</a></sup></span></div>
+    <div class="stat"><b>12%</b><span>of calories come from protein. Most of it is plant protein from cereals and pulses<sup><a href="#s1">1</a></sup></span></div>
+    <div class="stat"><b>21</b><span>states and UTs exceed the national limit of under 5% of energy from added sugar<sup><a href="#s1">1</a></sup></span></div>
+    <div class="stat hl"><b>351M</b><span>Indians have abdominal obesity, 39.5% of adults<sup><a href="#s2">2</a></sup></span></div>
+    <div class="stat"><b>101M</b><span>live with diabetes, and another 136 million with prediabetes<sup><a href="#s2">2</a></sup></span></div>
+    <div class="stat"><b>56.4%</b><span>of India's total disease burden is attributed to unhealthy diets<sup><a href="#s3">3</a></sup></span></div>
+  </div>
+  <div class="split">
+    <div>
+      <div class="waffle" id="waffle" role="img" aria-label="Out of 100 Indian adults, about 11 have diabetes and 15 have prediabetes"></div>
+      <div class="legend"><span><i style="background:var(--mirch)"></i>Diabetes, 11.4%</span><span><i style="background:var(--haldi)"></i>Prediabetes, 15.3%</span><span><i style="background:var(--steel-2)"></i>Neither</span></div>
+    </div>
+    <div>
+      <p class="big-claim">More than 1 in 4 Indian adults already has diabetes or prediabetes.<sup><a href="#s2">2</a></sup></p>
+      <p class="sub">The same nationwide data links high-carbohydrate diets to a higher chance of new type 2 diabetes. That's why Dabba tracks your carb share against ICMR's guidance (no more than 45% of calories from cereals and millets<sup><a href="#s3">3</a></sup>), not just your calorie total.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="block" id="bmi"><div class="wrap">
+  <div class="kicker">BMI was calibrated on European bodies</div>
+  <h2>A "healthy" 24 elsewhere is overweight in Dabba.</h2>
+  <p class="sub">A WHO expert consultation found that many Asians face high risk of type 2 diabetes and heart disease below the global overweight cut-off of 25, with risk starting between 22 and 25 depending on the population.<sup><a href="#s4">4</a></sup> Dabba uses the Indian consensus cut-offs, so the warning comes earlier.</p>
+  <div class="ruler"><svg id="ruler" viewBox="0 0 1000 220" role="img" aria-label="BMI scale comparing WHO international categories with the Asian Indian categories Dabba uses"></svg></div>
+</div></section>
+
+<section class="block" id="calculator"><div class="wrap">
+  <div class="kicker">Same person, two answers</div>
+  <h2>Put in your numbers. See what a typical tracker tells you, and what Dabba does.</h2>
+  <p class="sub">The typical approach: Mifflin–St Jeor resting burn × an activity multiplier, minus a flat 500 kcal to lose weight, judged on WHO BMI. Dabba adds body composition, work type, digestion, sleep, stress, climate and Indian BMI cut-offs. Both are calculated live in your browser with the same code the app uses.</p>
+  <div class="calc">
+    <form class="panel form" id="calc" aria-label="Your details" onsubmit="return false">
+      <div class="row">
+        <label>Sex<select id="c-sex"><option value="f">Female</option><option value="m" selected>Male</option></select></label>
+        <label>Age<input id="c-age" type="number" inputmode="numeric" min="18" max="90" value="28"></label>
+      </div>
+      <div class="row">
+        <label>Height (cm)<input id="c-h" type="number" inputmode="decimal" min="130" max="220" value="170"></label>
+        <label>Weight (kg)<input id="c-w" type="number" inputmode="decimal" min="35" max="200" value="74"></label>
+      </div>
+      <div class="row">
+        <label>Waist (cm)<input id="c-waist" type="number" inputmode="decimal" min="50" max="170" value="92"></label>
+        <label>Sleep (hours)<input id="c-sleep" type="number" inputmode="decimal" min="4" max="10" step="0.5" value="6"></label>
+      </div>
+      <label>Daily life<select id="c-occ"><option value="desk" selected>Mostly sitting (desk, study)</option><option value="mixed">On your feet part of the day</option><option value="field">Moving most of the day</option><option value="manual">Heavy physical work</option></select></label>
+      <label>Exercise<select id="c-ex"><option value="none">None</option><option value="walk" selected>Brisk walking, 3 × 30 min</option><option value="strength">Gym, 4 × 60 min</option><option value="run">Running, 3 × 40 min</option></select></label>
+      <div class="row">
+        <label>Diet<select id="c-diet"><option value="v" selected>Vegetarian</option><option value="vg">Vegan</option><option value="jain">Jain</option><option value="e">Eggetarian</option><option value="n">Non-veg</option></select></label>
+        <label>Stress<select id="c-stress"><option value="1">Low</option><option value="3">Medium</option><option value="4" selected>High</option></select></label>
+      </div>
+      <label>Health<select id="c-health"><option value="none" selected>Nothing to note</option><option value="diabetes">Diabetes or prediabetes</option><option value="pcos">PCOS</option><option value="hypo">Hypothyroidism</option></select></label>
+    </form>
+    <div class="panel">
+      <div class="versus">
+        <div class="vcard"><h3>Typical calorie tracker</h3><div class="k num" id="r-std">–</div><div class="muted" style="color:var(--muted)">kcal a day to lose weight</div><dl id="r-std-dl"></dl></div>
+        <div class="vcard dabba"><h3>Dabba</h3><div class="k num" id="r-dab">–</div><div style="color:var(--muted)">kcal a day to lose weight</div><dl id="r-dab-dl"></dl></div>
+      </div>
+      <p class="delta" id="r-delta"></p>
+      <div class="recipe" id="r-recipe"></div>
+    </div>
+  </div>
+  <div class="tablewrap">
+    <table class="cmp" id="personas" aria-label="Typical tracker versus Dabba for four example people"></table>
+  </div>
+  <p class="src">Example people are illustrative. Dabba's targets are estimates for general wellness, not medical advice.</p>
+</div></section>
+
+<section class="block" id="different"><div class="wrap">
+  <div class="kicker">What Dabba counts</div>
+  <h2>Nine things the standard calorie formula leaves out.</h2>
+  <p class="sub">The standard method most calorie apps start from uses age, sex, height, weight and one activity level. Here is what Dabba adds on top.</p>
+  <div class="matrix" id="matrix"></div>
+</div></section>
+
+<section class="block" id="forecast"><div class="wrap">
+  <div class="kicker">A forecast that tells you the truth</div>
+  <h2>Dabba shows where your habits lead, before the scale does.</h2>
+  <div class="split" style="align-items:start">
+    <div class="chartbox"><svg id="fc" viewBox="0 0 520 300" role="img" aria-label="Simulated weight over 26 weeks for an example person eating 2,300 kcal versus their target"></svg>
+      <div class="legend"><span><i style="background:var(--mirch)"></i>Eating 400 kcal over target</span><span><i style="background:var(--elaichi)"></i>Eating to target</span><span><i style="background:var(--muted)"></i>"3,500 kcal rule" (to target)</span></div>
+    </div>
+    <div style="display:grid;gap:16px">
+      <p class="sub" style="margin:0">Weight responds to a change in eating slowly, with a half-time of about a year.<sup><a href="#s5">5</a></sup> The popular "3,500 kcal per pound" rule ignores that, and overestimates weight loss.<sup><a href="#s6">6</a></sup> Dabba simulates your body day by day instead: your calorie burn falls as your weight falls, and each kilogram is split into fat and lean tissue by how much fat you carry.<sup><a href="#s7">7</a></sup></p>
+      <p class="sub" style="margin:0">Then it learns from you. Each time you weigh in, a regression compares the forecast with your scale and estimates the calories your log is missing, such as oil, chai and second helpings. If your path drifts away from your goal, or you're eating too little to be healthy, Dabba tells you on screen.</p>
+      <p class="sub" style="margin:0" id="fc-text"></p>
+    </div>
+  </div>
+</div></section>
+
+<section class="block" id="score"><div class="wrap">
+  <div class="kicker">Rewarding balance, not starvation</div>
+  <h2>The Thali Score: 100 points a day, and skipping meals loses them.</h2>
+  <div class="split" style="align-items:start">
+    <div class="bars" id="scorebars"></div>
+    <div style="display:grid;gap:16px">
+      <p class="sub" style="margin:0">Dabba's calorie points peak within 7% of your target and fall to zero 35% away, on either side, so eating far too little costs as many points as eating far too much. The leaderboard rewards people who eat well and log consistently, not the ones who starve.</p>
+      <p class="sub" style="margin:0">Daily scores turn into XP, streaks, 10 levels from Chai Rookie to Dabba Legend, and 20 badges, including Ekadashi Keeper and Chai in Check.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="cta" id="get"><div class="wrap">
+  <h2>Your plate, your body, your numbers.</h2>
+  <p>Free to use, no ads, and installs from your browser in two taps.</p>
+  <div class="ctas"><button class="btn haldi" data-get-app>Get the app, free</button><a class="btn" href="#" data-app-link>Use it in the browser</a></div>
+  <p style="font-size:14px">Works on Android and iPhone. About 0.4 MB.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <b id="sources" style="color:var(--ink)">Sources</b>
+  <ol>
+    <li id="s1">ICMR–INDIAB (Anjana RM et al.). Dietary profiles and associated metabolic risk factors in India from the ICMR–INDIAB survey. <i>Nature Medicine</i>, 30 September 2025. <a href="https://www.downtoearth.org.in/food/indian-diets-heavy-on-carbs-and-sugar-linked-to-surge-in-diabetes-study-finds">Summary</a></li>
+    <li id="s2">ICMR–INDIAB (Anjana RM et al.). Metabolic non-communicable disease health report of India. <i>The Lancet Diabetes &amp; Endocrinology</i>, 2023. doi:10.1016/S2213-8587(23)00119-5. <a href="https://nmji.in/lessons-learnt-from-the-icmrindiab-study">Findings table</a></li>
+    <li id="s3">ICMR–National Institute of Nutrition. Dietary Guidelines for Indians, 2024. <a href="https://thefederal.com/category/news/icmr-releases-17-dietary-guidelines-blames-unhealthy-diet-for-564-diseases-in-india-121540">Summary</a></li>
+    <li id="s4">WHO Expert Consultation. Appropriate body-mass index for Asian populations and its implications for policy and intervention strategies. <i>The Lancet</i> 2004;363:157–63. <a href="https://pubmed.ncbi.nlm.nih.gov/14726171/">PubMed</a></li>
+    <li id="s5">Hall KD et al. Quantification of the effect of energy imbalance on bodyweight. <i>The Lancet</i> 2011;378:826–37. <a href="https://pubmed.ncbi.nlm.nih.gov/21872751/">PubMed</a></li>
+    <li id="s6">Hall KD, Chow CC. Why is the 3500 kcal per pound weight loss rule wrong? <i>Int J Obes</i> 2013;37:1614. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3859816">PMC</a></li>
+    <li id="s7">Hall KD. What is the required energy deficit per unit weight loss? <i>Int J Obes</i> 2008;32:573–6. <a href="https://pubmed.ncbi.nlm.nih.gov/17848938/">PubMed</a></li>
+  </ol>
+  <p>Dabba provides general wellness estimates and is not a medical device or medical advice. Talk to a doctor or registered dietitian about medical decisions.</p>
+  <div class="links" style="margin-top:16px"><a href="#" data-app-link>Open the app</a><a href="privacy.html">Privacy policy</a><a href="delete-account.html">Delete your account</a></div>
+</div></footer>
+
+<div class="getapp" id="getapp" role="dialog" aria-modal="true" aria-labelledby="getapp-title" hidden><div class="card" id="getapp-card"></div></div>
+
+<script src="vendor/qrcode.js"></script>
+<script src="engine.js"></script>
+<script src="forecast.js"></script>
+<script>
+(() => {
+"use strict";
+const E = window.DabbaEngine, F = window.DabbaForecast;
+const $ = s => document.querySelector(s);
+const fmt = (n, d = 0) => Number(n).toLocaleString("en-IN", { maximumFractionDigits: d, minimumFractionDigits: d });
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* Hero thali: energy split of the average Indian diet (ICMR-INDIAB). Fat is the remainder. */
+(function thali() {
+  const parts = [["Carbohydrates", 62, "--haldi"], ["Protein", 12, "--mirch"], ["Fat and other", 26, "--jeera"]];
+  const C = 200, R = 150, w = 46, circ = 2 * Math.PI * R;
+  let acc = 0, segs = "";
+  for (const [, v, col] of parts) {
+    segs += `<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(${col})" stroke-width="${w}" stroke-dasharray="${circ * v / 100 - 3} ${circ}" stroke-dashoffset="${-circ * acc / 100}" transform="rotate(-90 ${C} ${C})"/>`;
+    acc += v;
+  }
+  const labels = parts.map(([n, v], i) => { const mid = (parts.slice(0, i).reduce((a, p) => a + p[1], 0) + v / 2) / 100 * 2 * Math.PI - Math.PI / 2; const x = C + (R + 0) * Math.cos(mid), y = C + R * Math.sin(mid); return `<text x="${x}" y="${y + 5}" text-anchor="middle" style="font:800 ${v > 20 ? 20 : 15}px var(--display);fill:#fff">${v}%</text>`; }).join("");
+  $("#thali").innerHTML = `<circle cx="${C}" cy="${C}" r="196" fill="var(--surface)" stroke="var(--line)"/>${segs}${labels}
+    <text x="${C}" y="${C - 10}" text-anchor="middle" style="font:800 64px var(--display);fill:var(--ink)">62%</text>
+    <text x="${C}" y="${C + 22}" text-anchor="middle" style="font:600 15px var(--body);fill:var(--muted)">of calories from carbs</text>
+    <text x="${C}" y="${C + 44}" text-anchor="middle" style="font:500 13px var(--body);fill:var(--muted)">protein 12%, fat and other about 26%</text>`;
+})();
+
+/* Waffle: 100 adults */
+(function waffle() {
+  let h = "";
+  for (let i = 0; i < 100; i++) h += `<i class="${i < 11 ? "d" : i < 26 ? "p" : ""}"></i>`;
+  $("#waffle").innerHTML = h;
+})();
+
+/* BMI ruler: WHO international vs Asian Indian categories */
+(function ruler() {
+  const x = b => 40 + (b - 16) / (32 - 16) * 920;
+  const band = (y, a, b, col, label, txt = "#fff") => `<rect x="${x(a)}" y="${y}" width="${x(b) - x(a) - 2}" height="44" rx="8" fill="var(${col})"/><text x="${(x(a) + x(b)) / 2}" y="${y + 28}" text-anchor="middle" style="font:700 14px var(--body);fill:${txt}">${label}</text>`;
+  const ticks = [16, 18.5, 20, 23, 25, 27.5, 30, 32].map(b => `<line x1="${x(b)}" x2="${x(b)}" y1="176" y2="184" stroke="var(--muted)"/><text x="${x(b)}" y="202" text-anchor="middle" style="font:600 13px var(--body);fill:var(--muted)">${b}</text>`).join("");
+  $("#ruler").innerHTML = `
+    <text x="40" y="24" style="font:700 15px var(--body);fill:var(--ink)">WHO international</text>
+    ${band(34, 16, 18.5, "--jal", "Under")}${band(34, 18.5, 25, "--elaichi", "Healthy")}${band(34, 25, 30, "--haldi", "Overweight", "#241600")}${band(34, 30, 32, "--mirch", "Obese")}
+    <text x="40" y="112" style="font:700 15px var(--body);fill:var(--ink)">Asian Indian (used by Dabba)</text>
+    ${band(122, 16, 18.5, "--jal", "Under")}${band(122, 18.5, 23, "--elaichi", "Healthy")}${band(122, 23, 25, "--haldi", "Overweight", "#241600")}${band(122, 25, 32, "--mirch", "Obese")}
+    <rect x="${x(23)}" y="28" width="${x(25) - x(23)}" height="144" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="6 5" rx="10"/>
+    ${ticks}`;
+})();
+
+/* Calculator */
+const EX = { none: [0, 0], walk: [3, 30], strength: [4, 60], run: [3, 40] };
+const STD_PAL = { none: 1.2, walk: 1.375, strength: 1.55, run: 1.55 };
+const OCC_BUMP = { desk: 0, mixed: 0.05, field: 0.1, manual: 0.2 };
+function standard(p) {
+  const bmr = 10 * p.weight + 6.25 * p.height - 5 * p.age + (p.sex === "m" ? 5 : -161);
+  const pal = STD_PAL[p.exercise] + OCC_BUMP[p.occupation];
+  const tdee = bmr * pal;
+  const target = Math.max(p.sex === "f" ? 1200 : 1500, Math.round((tdee - 500) / 10) * 10);
+  const bmi = p.weight / Math.pow(p.height / 100, 2);
+  const who = bmi < 18.5 ? "Underweight" : bmi < 25 ? "Healthy" : bmi < 30 ? "Overweight" : "Obese";
+  return { bmr, tdee, target, bmi, who, protein: Math.round(0.8 * p.weight) };
+}
+function profileFrom(o) {
+  const [d, m] = EX[o.ex];
+  return { sex: o.sex, age: +o.age, height: +o.h, weight: +o.w, waist: +o.waist || null, occupation: o.occ, steps: o.occ === "desk" ? 4500 : 7500, exercise: o.ex, exDays: d, exMins: m,
+    diet: o.diet, region: "south", climate: "hot_humid", sleep: +o.sleep, stress: +o.stress, health: o.health, life: "none", cycleTrack: false, lastPeriod: null, goal: "lose", pace: "normal" };
+}
+const bandShort = k => ({ under: "Underweight", normal: "Healthy", over: "Overweight", obese: "Obese" }[k]);
+function renderCalc() {
+  const o = { sex: $("#c-sex").value, age: $("#c-age").value, h: $("#c-h").value, w: $("#c-w").value, waist: $("#c-waist").value, sleep: $("#c-sleep").value, occ: $("#c-occ").value, ex: $("#c-ex").value, diet: $("#c-diet").value, stress: $("#c-stress").value, health: $("#c-health").value };
+  if (!(o.age >= 18 && o.age <= 90 && o.h >= 130 && o.h <= 220 && o.w >= 35 && o.w <= 200 && o.sleep >= 4 && o.sleep <= 10)) return;
+  const p = profileFrom(o), s = standard(p), d = E.compute(p);
+  $("#r-std").textContent = fmt(s.target);
+  $("#r-dab").textContent = fmt(d.target);
+  const stdCarb = Math.round((s.target * 0.55) / 4);
+  $("#r-std-dl").innerHTML = `<dt>BMI category</dt><dd>${s.who} (${fmt(s.bmi, 1)})</dd><dt>Body fat considered</dt><dd>No</dd><dt>Protein</dt><dd>${s.protein} g</dd><dt>Carb limit</dt><dd>None</dd><dt>Sleep and stress</dt><dd>Ignored</dd>`;
+  $("#r-dab-dl").innerHTML = `<dt>BMI category</dt><dd>${bandShort(d.band.key)} (${fmt(d.bmi, 1)})</dd><dt>Body fat (est.)</dt><dd>${fmt(d.bf, 1)}%</dd><dt>Protein</dt><dd>${d.macros.protein} g</dd><dt>Carb limit</dt><dd>${Math.round(d.carbCap * 100)}% of calories</dd><dt>Water</dt><dd>${fmt(d.water / 1000, 1)} L</dd>`;
+  const diff = s.target - d.target;
+  const catChange = s.who !== bandShort(d.band.key);
+  $("#r-delta").innerHTML = `${Math.abs(diff) < 40 ? "Both land in a similar place for you, but" : `The typical method gives you <b class="num">${fmt(Math.abs(diff))}</b> kcal a day ${diff > 0 ? "more" : "less"} (${fmt(Math.abs(diff) / d.target * 100)}%), and`} it ${catChange ? `calls your weight <b>${s.who.toLowerCase()}</b> where Dabba says <b>${bandShort(d.band.key).toLowerCase()}</b>` : "uses the same BMI category"}. Dabba also sets <b class="num">${d.macros.protein - s.protein > 0 ? "+" + (d.macros.protein - s.protein) : d.macros.protein - s.protein} g</b> protein a day versus the basic 0.8 g/kg.`;
+  $("#r-recipe").innerHTML = `<b style="margin-top:6px">How Dabba built ${fmt(d.target)} kcal</b>` + d.steps.map(st => `<div><span>${esc(st.k)}</span><b class="v">${st.v >= 0 ? "+" : "−"}${fmt(Math.abs(st.v))}</b><span class="d">${esc(st.d)}</span></div>`).join("");
+}
+document.querySelectorAll("#calc input, #calc select").forEach(el => el.addEventListener("input", renderCalc));
+renderCalc();
+
+/* Persona comparison, computed live */
+(function personas() {
+  const P = [
+    ["Desk-job developer, Bengaluru", "Male, 29, 172 cm, 78 kg, waist 94 cm, sleeps 6 h, high stress", { sex: "m", age: 29, h: 172, w: 78, waist: 94, sleep: 6, occ: "desk", ex: "none", diet: "v", stress: 4, health: "none" }],
+    ["Homemaker with PCOS, Chennai", "Female, 34, 156 cm, 66 kg, waist 88 cm, sleeps 7 h", { sex: "f", age: 34, h: 156, w: 66, waist: 88, sleep: 7, occ: "mixed", ex: "walk", diet: "v", stress: 3, health: "pcos" }],
+    ["Site supervisor, Delhi", "Male, 41, 168 cm, 70 kg, waist 86 cm, sleeps 7.5 h", { sex: "m", age: 41, h: 168, w: 70, waist: 86, sleep: 7.5, occ: "manual", ex: "none", diet: "n", stress: 3, health: "none" }],
+    ["Hostel student, Chennai", "Female, 20, 160 cm, 59 kg, waist 78 cm, sleeps 5.5 h", { sex: "f", age: 20, h: 160, w: 59, waist: 78, sleep: 5.5, occ: "desk", ex: "walk", diet: "e", stress: 4, health: "none" }]
+  ];
+  const rows = P.map(([n, desc, o]) => {
+    const p = profileFrom(o), s = standard(p), d = E.compute(p), diff = d.target - s.target;
+    return `<tr><td><b>${n}</b><small>${desc}</small></td><td>${fmt(s.target)}<small>${s.who} (BMI ${fmt(s.bmi, 1)})</small></td><td><b>${fmt(d.target)}</b><small>${bandShort(d.band.key)}, ${fmt(d.bf, 0)}% fat</small></td><td class="${diff < 0 ? "neg" : "pos"}">${diff > 0 ? "+" : ""}${fmt(diff)}<small>${diff > 0 ? "+" : ""}${fmt(diff / s.target * 100)}%</small></td><td>${s.protein} → <b>${d.macros.protein}</b> g<small>protein</small></td></tr>`;
+  }).join("");
+  $("#personas").innerHTML = `<thead><tr><th>Person</th><th>Typical tracker kcal</th><th>Dabba kcal</th><th>Difference</th><th>Protein target</th></tr></thead><tbody>${rows}</tbody>`;
+})();
+
+/* Feature matrix */
+(function matrix() {
+  const rows = [
+    ["Asian Indian BMI cut-offs", "Flags risk from BMI 23, not 25"],
+    ["Body fat from waist and height", "Relative Fat Mass when you add your waist; lean mass feeds your resting burn"],
+    ["Work type separate from exercise", "A desk job and a site job differ by hundreds of kcal a day"],
+    ["Digestion cost by diet", "Cereal-heavy vegetarian plates burn slightly less to digest than protein-rich ones"],
+    ["Sleep and stress", "Under 7 hours of sleep or high stress eases your deficit"],
+    ["Climate-adjusted water", "Hot-dry, hot-humid, moderate or cold"],
+    ["Carb cap for central fat, diabetes and PCOS", "45% of calories instead of no limit"],
+    ["Protein set on a healthy-weight basis", "Higher for weight loss and strength training, not just 0.8 g/kg"],
+    ["Deficit sized to your body fat", "Instead of a flat 500 kcal for everyone"]
+  ];
+  $("#matrix").innerHTML = `<div class="r"><span>What's counted</span><span class="c">Dabba</span><span class="c">Standard formula</span></div>` +
+    rows.map(([t, s]) => `<div class="r"><div><b>${t}</b><small>${s}</small></div><span class="c yes">Yes</span><span class="c no">No</span></div>`).join("");
+})();
+
+/* Forecast demo, simulated with the app's own model */
+(function fc() {
+  const p = profileFrom({ sex: "m", age: 29, h: 172, w: 82, waist: 96, sleep: 7, occ: "desk", ex: "walk", diet: "v", stress: 2, health: "none" });
+  const t = E.compute(p), days = 182;
+  const over = F.simulate(p, p.weight, t.target + 400, days);
+  const plan = F.simulate(p, p.weight, t.target, days);
+  const naive = Array.from({ length: days + 1 }, (_, d) => p.weight - (t.tdee - t.target) * d / 7700);
+  const all = [...over, ...plan, ...naive]; const lo = Math.floor(Math.min(...all)) - 1, hi = Math.ceil(Math.max(...all)) + 1;
+  const W = 520, H = 300, pl = 40, pr = 12, pt = 14, pb = 28;
+  const X = d => pl + (W - pl - pr) * d / days, Y = v => pt + (H - pt - pb) * (1 - (v - lo) / (hi - lo));
+  const path = a => a.map((v, i) => (i % 3 && i !== days ? "" : `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`)).join(" ");
+  const ticks = []; for (let v = Math.ceil(lo); v <= hi; v += Math.max(1, Math.round((hi - lo) / 5))) ticks.push(v);
+  $("#fc").innerHTML = ticks.map(v => `<line x1="${pl}" x2="${W - pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${pl - 6}" y="${Y(v) + 4}" text-anchor="end">${v}</text>`).join("") +
+    [0, 4, 8, 12, 16, 20, 26].map(w => `<text x="${X(w * 7)}" y="${H - 8}" text-anchor="middle">${w ? w + " wk" : "now"}</text>`).join("") +
+    `<path d="${path(naive)}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="3 5"/>
+     <path d="${path(plan)}" fill="none" stroke="var(--elaichi)" stroke-width="3"/>
+     <path d="${path(over)}" fill="none" stroke="var(--mirch)" stroke-width="3"/>
+     <circle cx="${X(days)}" cy="${Y(over[days])}" r="5" fill="var(--mirch)"/><text x="${X(days) - 8}" y="${Y(over[days]) - 10}" text-anchor="end" style="fill:var(--mirch);font-weight:700;font-size:13px">${fmt(over[days], 1)} kg</text>
+     <circle cx="${X(days)}" cy="${Y(plan[days])}" r="5" fill="var(--elaichi)"/><text x="${X(days) - 8}" y="${Y(plan[days]) + 20}" text-anchor="end" style="fill:var(--elaichi);font-weight:700;font-size:13px">${fmt(plan[days], 1)} kg</text>`;
+  $("#fc-text").innerHTML = `In this example a 29-year-old at ${p.weight} kg with a ${fmt(t.target)} kcal target loses <b>${fmt(p.weight - plan[days], 1)} kg</b> in 26 weeks eating to target. Eating 400 kcal more each day, about two cups of sweet chai and a samosa, cuts that to <b>${fmt(p.weight - over[days], 1)} kg</b>. The 3,500-kcal rule would have promised <b>${fmt(p.weight - naive[days], 1)} kg</b>.`;
+})();
+
+/* Thali Score weights, straight from the engine's scoring */
+(function score() {
+  const parts = [["Calories on target", 35, "--ink"], ["Protein", 20, "--mirch"], ["Water", 15, "--jal"], ["Fibre", 10, "--elaichi"], ["Sugar and salt limits", 10, "--haldi"], ["Logging every meal", 10, "--jeera"]];
+  $("#scorebars").innerHTML = parts.map(([l, v, c]) => `<div class="b"><span>${l}</span><div class="t"><i style="width:${v / 35 * 100}%;background:var(${c})"></i></div><b class="num">${v}</b></div>`).join("");
+})();
+
+/* ===== SET THIS: your Firebase app address (from the dabba-app-firebase deploy) ===== */
+const APP_URL = "https://dabba-app-d9447.web.app/";
+/* Optional: a direct .apk download, e.g. "https://github.com/<you>/dabba/releases/latest/download/dabba.apk" */
+const APK_URL = "";
+
+const ua = navigator.userAgent;
+const isPhone = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const installUrl = APP_URL + (APP_URL.includes("?") ? "&" : "?") + "install=1";
+document.querySelectorAll("[data-app-link]").forEach(a => { a.href = APP_URL; });
+const sheet = $("#getapp"), card = $("#getapp-card");
+function closeSheet() { sheet.hidden = true; }
+sheet.addEventListener("click", e => { if (e.target === sheet || e.target.closest("[data-close]")) closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+function qrSvg(text) {
+  try { const q = qrcode(0, "M"); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); }
+  catch (e) { return `<p class="note">${esc(text)}</p>`; }
+}
+// Phones go straight to the app, which opens its own install step (?install=1). Laptops get a QR code.
+function getApp() {
+  if (isPhone) { location.href = installUrl; return; }
+  card.innerHTML = `<h3 id="getapp-title">Get Dabba on your phone</h3>
+    <div class="qr" aria-label="QR code linking to the app">${qrSvg(installUrl)}</div>
+    <p style="text-align:center">Scan with your phone's camera to install Dabba.</p>
+    <div class="row">${APK_URL ? `<a class="btn" href="${APK_URL}">Download the APK</a>` : ""}<a class="btn" href="${APP_URL}">Try it on this computer</a><button class="btn" data-close>Close</button></div>`;
+  sheet.hidden = false;
+  const f = card.querySelector(".btn"); if (f) f.focus();
+}
+document.querySelectorAll("[data-get-app]").forEach(b => b.addEventListener("click", getApp));
+})();
+</script>
+</body>
+</html>
